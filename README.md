@@ -16,7 +16,7 @@ A smart web application that predicts flight prices using Machine Learning (Rand
 - **🚀 Fast Performance**: Optimized for quick predictions
 
 ## 📂 Project Structure
-
+```
 ```
 flight_price_predictor/
 ├── core/                          # Django app
