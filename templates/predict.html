@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-8">
+  <!-- Reduced py-12 to py-8 -->
+  <div class="w-full max-w-4xl">
+    <!-- Reverted to original width -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div class="md:flex">
+        <!-- Left Side - Visual Section -->
+        <div class="md:w-2/5 bg-gradient-to-br from-blue-600 to-indigo-800 p-6 text-white relative overflow-hidden">
+          <div class="absolute top-0 right-0 opacity-10">
+            <i class="fas fa-plane text-[150px]"></i> <!-- Smaller plane icon -->
+          </div>
+          <h1 class="text-2xl font-bold mb-2">Flight Price Predictor</h1> <!-- Smaller heading -->
+          <p class="text-blue-100 text-sm mb-6">Smart predictions for savvy travelers</p> <!-- Smaller text -->
+
+          {% if show_result %}
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+            <p class="text-xs font-medium text-blue-100">Estimated Price</p>
+            <div class="text-3xl font-bold mt-1">₹
+              {{ prediction }}
+            </div> <!-- Slightly smaller price -->
+            <div class="flex items-center mt-2 text-blue-100 text-xs">
+              <i class="fas fa-info-circle mr-1"></i>
+              <p>Price may vary based on demand</p>
+            </div>
+          </div>
+          {% else %}
+          <div class="space-y-3 mt-4">
+            <!-- More compact spacing -->
+            <!-- Auto-rotating tips -->
+            <div x-data="{
+                            currentTip: 0,
+                            tips: [
+                                '✈️ Book 6-8 weeks in advance for best prices',
+                                '🕒 Early morning flights are typically 15% cheaper',
+                                '📅 Tuesday/Wednesday are cheapest days to fly',
+                                '🍂 Off-season travel (Sep-Nov) saves 20-30%',
+                                '🧳 1-stop flights often 25% cheaper than direct'
+                            ],
+                            init() {
+                                setInterval(() => {
+                                    this.currentTip = (this.currentTip + 1) % this.tips.length;
+                                }, 3000);
+                            }
+                        }" class="bg-white/10 rounded-lg p-3 text-sm">
+              <div x-text="tips[currentTip]" class="transition-opacity duration-500" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-white/10 p-2 rounded flex items-start">
+                <i class="fas fa-cookie-bite mr-2 mt-0.5"></i>
+                <span>Clear cookies or use incognito mode</span>
+              </div>
+              <div class="bg-white/10 p-2 rounded flex items-start">
+                <i class="fas fa-bell mr-2 mt-0.5"></i>
+                <span>Set price alerts for your route</span>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Right Side - Form Section -->
+        <div class="md:w-3/5 p-6">
+          <!-- Reduced padding -->
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Flight Details</h2> <!-- Smaller heading -->
+            <div class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs font-medium">
+              <i class="fas fa-bolt mr-0.5"></i> AI-Powered
+            </div>
+          </div>
+
+          <form method="post" class="space-y-3">
+            <!-- Reduced spacing -->
+            {% csrf_token %}
+
+            <div class="grid md:grid-cols-2 gap-3">
+              <!-- Reduced gap -->
+              {{ form|crispy }}
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg mt-4">
+              <i class="fas fa-paper-plane mr-1"></i> Predict Price
+            </button>
+          </form>
+
+          <!-- Compact Price Facts -->
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center text-sm text-gray-600 mb-2">
+              <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+              <span class="font-medium">Quick Tips:</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="flex items-start">
+                <span class="text-blue-500 mr-1">•</span>
+                <span>Vistara costs 20-40% more than Indigo</span>
+              </div>
+              <div class="flex items-start">
+                <span class="text-blue-500 mr-1">•</span>
+                <span>Business class doubles the price</span>
+              </div>
+              <div class="flex items-start">
+                <span class="text-blue-500 mr-1">•</span>
+                <span>Last-week flights cost 2x more</span>
+              </div>
+              <div class="flex items-start">
+                <span class="text-blue-500 mr-1">•</span>
+                <span>Afternoon flights are most expensive</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 text-center text-xl text-gray-500">
+      <h2>© 2025 Flight Price Predictor. 😉😎 Shriram responsible for any inconsistencies. ❤️</h2>
+    </div>
+  </div>
+</div>
+
+<!-- Add this script at the end of your base.html -->
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('tipRotator', () => ({
+      currentTip: 0,
+      tips: [
+        "Book on Sundays for 5-10% savings",
+        "Mid-week flights are cheapest",
+        "Red-eye flights save 10-20%",
+        "February & September have lowest prices"
+      ],
+      init() {
+        setInterval(() => {
+          this.currentTip = (this.currentTip + 1) % this.tips.length;
+        }, 3000);
+      }
+    }));
+  });
+</script>
+{% endblock %}
